@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="五子棋冒险" />
+    <meta name="theme-color" content="#061428" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>五子棋冒险</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/icon-180.png" />
+    <link rel="icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <div class="app" id="app">
+      <!-- ================= 首页 ================= -->
+      <section class="screen active" id="screen-home">
+        <div class="home-inner">
+          <div class="logo">
+            <img id="logo1" alt="五子棋冒险" />
+            <img id="logo2" alt="" />
+          </div>
+          <div class="menu">
+            <button class="menu-btn accent" data-nav="play-setup">
+              <span class="mi" aria-hidden="true">⚔</span>
+              <span class="label" data-i18n="menu.play">对弈</span>
+            </button>
+            <button class="menu-btn" data-nav="vcf-sets">
+              <span class="mi" aria-hidden="true">🎯</span>
+              <span class="label" data-i18n="menu.vcf">VCF 挑战</span>
+            </button>
+            <button class="menu-btn" data-nav="lectures">
+              <span class="mi" aria-hidden="true">📖</span>
+              <span class="label" data-i18n="menu.lecture">连珠课程</span>
+            </button>
+            <button class="menu-btn" data-nav="settings">
+              <span class="mi" aria-hidden="true">⚙</span>
+              <span class="label" data-i18n="menu.settings">设置</span>
+            </button>
+          </div>
+          <div class="home-foot">
+            <span id="homeStats"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 对局设置 ================= -->
+      <section class="screen" id="screen-play-setup">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">‹</button>
+          <h1 data-i18n="play.title">对局设置</h1>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="panel">
+          <div class="field">
+            <div class="field-label" data-i18n="play.color">你的执子</div>
+            <div class="chips" id="colorChips">
+              <button class="chip active" data-color="1"><span class="dot black"></span><span data-i18n="play.asBlack">执黑</span></button>
+              <button class="chip" data-color="2"><span class="dot white"></span><span data-i18n="play.asWhite">执白</span></button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label" data-i18n="play.difficulty">难度</div>
+            <div class="chips" id="diffChips">
+              <button class="chip" data-diff="easy" data-i18n="play.easy">初级</button>
+              <button class="chip active" data-diff="normal" data-i18n="play.normal">中级</button>
+              <button class="chip" data-diff="hard" data-i18n="play.hard">高级</button>
+            </div>
+          </div>
+          <p class="note" id="renjuNote"></p>
+          <button class="primary-btn" id="startGameBtn" data-i18n="play.start">开始对局</button>
+        </div>
+      </section>
+
+      <!-- ================= 对局 ================= -->
+      <section class="screen" id="screen-game">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">‹</button>
+          <h1 id="gameTitle">对局</h1>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="board-wrap">
+          <div class="board" id="gameBoard"></div>
+          <div class="toast" id="gameToast"></div>
+        </div>
+        <div class="statusbar">
+          <span class="turn-dot" id="gameTurnDot"></span>
+          <span id="gameStatus">轮到你落子</span>
+        </div>
+        <div class="controls">
+          <button class="ctrl" id="undoBtn" data-i18n="game.undo">悔棋</button>
+          <button class="ctrl" id="resignBtn" data-i18n="game.resign">认输</button>
+          <button class="ctrl" id="restartBtn" data-i18n="game.restart">重开</button>
+        </div>
+      </section>
+
+      <!-- ================= VCF 题库列表 ================= -->
+      <section class="screen" id="screen-vcf-sets">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">‹</button>
+          <h1 data-i18n="vcf.title">VCF 挑战</h1>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="scroll" id="vcfSetList"></div>
+      </section>
+
+      <!-- ================= VCF 解题 ================= -->
+      <section class="screen" id="screen-vcf-play">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">‹</button>
+          <div class="topbar-center">
+            <h1 id="vcfSetName">VCF</h1>
+            <div class="sub" id="vcfProgress"></div>
+          </div>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="board-wrap">
+          <div class="board" id="vcfBoard"></div>
+          <div class="toast" id="vcfToast"></div>
+        </div>
+        <div class="statusbar">
+          <span class="turn-dot" id="vcfTurnDot"></span>
+          <span id="vcfStatus">白先 · 请形成四</span>
+        </div>
+        <div class="controls">
+          <button class="ctrl" id="vcfHintBtn" data-i18n="vcf.hint">提示</button>
+          <button class="ctrl" id="vcfRetryBtn" data-i18n="vcf.retry">重来</button>
+          <button class="ctrl" id="vcfNextBtn" data-i18n="vcf.next">下一题</button>
+        </div>
+      </section>
+
+      <!-- ================= 课程列表 ================= -->
+      <section class="screen" id="screen-lectures">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">‹</button>
+          <h1 data-i18n="lecture.title">连珠课程</h1>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="scroll" id="lectureList"></div>
+      </section>
+
+      <!-- ================= 课程内容 ================= -->
+      <section class="screen" id="screen-lecture">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">‹</button>
+          <div class="topbar-center">
+            <h1 id="lectureTitle">课程</h1>
+            <div class="sub" id="lectureIndex"></div>
+          </div>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="scroll lecture-body" id="lectureBody"></div>
+        <nav class="lecture-nav">
+          <button class="ctrl" id="lecPrev" data-i18n="lecture.prev">上一课</button>
+          <button class="ctrl primary" id="lecNext" data-i18n="lecture.next">下一课</button>
+        </nav>
+      </section>
+
+      <!-- ================= 设置 ================= -->
+      <section class="screen" id="screen-settings">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">‹</button>
+          <h1 data-i18n="settings.title">设置</h1>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="scroll settings-body">
+          <div class="section">
+            <div class="field-label" data-i18n="settings.language">语言</div>
+            <div class="chips" id="langChips"></div>
+          </div>
+          <div class="section">
+            <div class="field-label" data-i18n="settings.board">棋盘设计</div>
+            <div class="board-grid" id="boardGrid"></div>
+          </div>
+          <div class="section">
+            <div class="field-label" data-i18n="settings.stone">棋子样式</div>
+            <div class="stone-grid" id="stoneGrid"></div>
+          </div>
+          <div class="section">
+            <div class="field-label" data-i18n="settings.sound">声音与音乐</div>
+            <label class="switch-row">
+              <span data-i18n="settings.bgm">背景音乐</span>
+              <input type="checkbox" id="bgmToggle" />
+            </label>
+            <label class="switch-row">
+              <span data-i18n="settings.sfx">效果音</span>
+              <input type="checkbox" id="sfxToggle" />
+            </label>
+          </div>
+          <div class="section">
+            <label class="switch-row">
+              <span data-i18n="settings.doubleTap">双击落子（防误触）</span>
+              <input type="checkbox" id="doubleTapToggle" />
+            </label>
+          </div>
+          <div class="section">
+            <button class="row-btn" data-nav="about" data-i18n="settings.about">关于本作</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 关于 ================= -->
+      <section class="screen" id="screen-about">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">‹</button>
+          <h1 data-i18n="about.title">关于</h1>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="scroll about-body">
+          <img class="about-logo" id="aboutLogo" alt="" />
+          <p id="aboutText"></p>
+          <p class="about-src" id="aboutSource"></p>
+        </div>
+      </section>
+
+      <!-- 结果弹窗 -->
+      <div class="modal-backdrop hidden" id="modalBackdrop">
+        <div class="modal" id="modal">
+          <img class="modal-crown" id="modalCrown" alt="" />
+          <h2 id="modalTitle"></h2>
+          <p id="modalText"></p>
+          <div class="modal-actions" id="modalActions"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/engine.js"></script>
+    <script src="js/vcf.js"></script>
+    <script src="js/problems.js"></script>
+    <script src="js/lectures.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/ui.js"></script>
+  </body>
+</html>

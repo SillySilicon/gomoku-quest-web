@@ -1,0 +1,19 @@
+<h3><strong>禁手について</strong></h3>
+<p>連珠では、<strong>先手(黒)が有利になりすぎないように</strong>、3つの禁手(<strong>三三</strong>、<strong>四四</strong>、<strong>長連</strong>)があります。<strong>白には禁手はありません</strong>。</p>
+<p><strong>三三</strong>: 2つ以上の止まっていない3つ並びを同時に作る手</p>
+<p>下図の✖️の位置が<strong>三三</strong>で黒は石を置くことが出来ません。</p>
+<board board=";B[cc];B[dd];B[fe];B[ge];B[hl];B[jl];B[kj];B[ki]" crosses="ee,kl"></board>
+<p>三の厳密な定義は後で述べますが、下図は<strong>白石によって止まっている</strong>ので、いずれも三三ではありません。</p>
+<board board=";B[cc];B[dd];B[fe];B[ge];W[he];B[hl];B[jl];B[kj];B[ki];W[kh]" crosses="ee,kl"></board>
+
+<p><strong>四四(しし)</strong>: 2つ以上の四を同時に作る手</p>
+<board board=";B[hh];B[ii];B[ed];B[fd];B[hd];B[de];B[df];B[dg];W[id];B[mg];W[dh];B[ki];B[lh];B[kk];W[nf]" crosses="dd,jj"></board>
+<!--
+<p>四四は一直線上に出来る場合もあります。下図の✖️の位置も<strong>四四</strong>の禁手です。</p>
+<board board=";B[dd];B[ed];B[fd];B[jd];B[kd];B[ld];B[gg];B[ig];B[eg];B[kg]" crosses="hd,hg"></board>
+-->
+
+<p><strong>長連(ちょうれん)</strong>: 6つ以上の石を並べる手</p>
+<board board=";B[ih];B[gh];B[jh];B[fh];B[kh]" crosses="hh"></board>
+
+<p>基本的なルールは<strong>以上</strong>です。次章からは、<strong>基本的な戦略</strong>を説明していきます。</p>
