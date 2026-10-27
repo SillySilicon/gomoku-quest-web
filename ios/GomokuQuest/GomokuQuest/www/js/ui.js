@@ -1404,6 +1404,21 @@
     vcfBoard.applyDesign();
 
     setupInstallHint();
+
+    // 首屏渲染完之后，在空闲时把按需加载的两个脚本悄悄拉下来，
+    // 这样断网状态下也能正常进入挑战页和课程页（Service Worker 会顺手缓存）
+    var warm = function () {
+      ["js/problems.js", "js/lectures.js"].forEach(function (src) {
+        try {
+          fetch(src).catch(function () {});
+        } catch (e) {}
+      });
+    };
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(warm, { timeout: 6000 });
+    } else {
+      setTimeout(warm, 4500);
+    }
   }
 
   /*
