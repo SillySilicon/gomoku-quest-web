@@ -1,13 +1,12 @@
 /* Service Worker：外壳预缓存 + 素材运行时缓存 */
-const VERSION = "gomoku-v1";
+const VERSION = "gomoku-v2";
 const SHELL = [
   "./",
   "./index.html",
   "./css/app.css",
   "./js/engine.js",
   "./js/vcf.js",
-  "./js/problems.js",
-  "./js/lectures.js",
+  "./js/problems-meta.js",
   "./js/i18n.js",
   "./js/ui.js",
   "./manifest.webmanifest",

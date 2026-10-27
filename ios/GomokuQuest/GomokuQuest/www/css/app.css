@@ -1000,3 +1000,84 @@ body {
     gap: 18px;
   }
 }
+
+/* 题库按需加载时的提示 */
+.loading-tip {
+  padding: 42px 0;
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: rgba(220, 238, 255, 0.55);
+}
+
+
+/* iOS Safari 未安装时的「添加到主屏幕」提示条 */
+.install-bar {
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 14px;
+  background: rgba(8, 32, 56, 0.94);
+  border: 1px solid rgba(90, 200, 255, 0.32);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #e6f4ff;
+  font-size: 12.5px;
+  line-height: 1.5;
+  animation: installIn 0.28s ease-out;
+}
+.install-bar[hidden] {
+  display: none;
+}
+@keyframes installIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.install-icon {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  color: #06263c;
+  background: linear-gradient(180deg, #8fd8ff, #4fb6e8);
+}
+.install-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.install-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.install-desc {
+  color: #a9c8dd;
+}
+.install-close {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.09);
+  color: #cfe6f5;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+}

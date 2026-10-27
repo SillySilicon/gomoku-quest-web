@@ -59,6 +59,12 @@ INCLUDE_SOUNDS.forEach((f) => addAsset("assets/sounds/" + f));
 
 let html = read("index.html");
 
+// 单文件版没有网络请求，题库与课程直接内联（浏览器版是进入对应页面才按需加载）
+html = html.replace(
+  '<script src="js/ui.js"></script>',
+  '<script src="js/problems.js"></script>\n    <script src="js/lectures.js"></script>\n    <script src="js/ui.js"></script>',
+);
+
 // --- 内联 CSS / JS
 html = html.replace(/<link rel="stylesheet" href="css\/app\.css"\s*\/?>/, () => "<style>\n" + read("css/app.css") + "\n</style>");
 html = html.replace(/<script src="js\/([^"]+)"><\/script>/g, (m, file) => {

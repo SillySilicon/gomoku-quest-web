@@ -231,11 +231,20 @@
       </div>
     </div>
 
+    <div class="install-bar" id="installBar" hidden>
+      <div class="install-icon">＋</div>
+      <div class="install-body">
+        <div class="install-title" id="installTitle">安装到手机桌面</div>
+        <div class="install-desc" id="installDesc"></div>
+      </div>
+      <button class="install-close" id="installClose" aria-label="关闭">×</button>
+    </div>
+
     <script src="js/engine.js"></script>
     <script src="js/vcf.js"></script>
-    <script src="js/problems.js"></script>
-    <script src="js/lectures.js"></script>
+    <script src="js/problems-meta.js"></script>
     <script src="js/i18n.js"></script>
     <script src="js/ui.js"></script>
+    <!-- problems.js（208 KB）与 lectures.js（42 KB）改为按需加载，见 ui.js 的 ensureProblems / ensureLectures -->
   </body>
 </html>

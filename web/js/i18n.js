@@ -95,7 +95,12 @@ window.I18N = {
 "vcf.noFourLeft":"已没有能冲四的点，可以重来或看提示",
 "vcf.continueHint":"做成四，对手只能被动去堵",
 "vcf.noHint":"这题暂时算不出提示，可以自己找找看",
-"vcf.notFourToast":"没做成四也可以下，但对手会来防守"
+"vcf.notFourToast":"没做成四也可以下，但对手会来防守",
+"common.loading":"载入题库…",
+"install.title":"安装到手机桌面",
+"install.desc":"添加到主屏幕后可以全屏、离线使用，和 App 一样。",
+"install.iosStep":"Safari 底部点「分享」→「添加到主屏幕」",
+"install.otherStep":"浏览器菜单 →「添加到主屏幕 / 安装应用」"
 },
 "en":{
 "menu.play":"Play",
@@ -192,7 +197,12 @@ window.I18N = {
 "vcf.noFourLeft":"No four-making moves left — retry or use Hint",
 "vcf.continueHint":"Make a four and the opponent must block",
 "vcf.noHint":"No hint available for this one — try to find it yourself",
-"vcf.notFourToast":"You can play non-four moves, but the opponent will defend"
+"vcf.notFourToast":"You can play non-four moves, but the opponent will defend",
+"common.loading":"Loading…",
+"install.title":"Install to Home Screen",
+"install.desc":"Add to Home Screen for a fullscreen, offline app.",
+"install.iosStep":"Tap Share at the bottom → Add to Home Screen",
+"install.otherStep":"Browser menu → Add to Home Screen / Install app"
 },
 "ja":{
 "menu.play":"対局",
@@ -289,7 +299,12 @@ window.I18N = {
 "vcf.noFourLeft":"四を作れる点がありません。やり直すかヒントを見てください",
 "vcf.continueHint":"四を作れば相手は受けに回ります",
 "vcf.noHint":"この問題はヒントを計算できませんでした",
-"vcf.notFourToast":"四以外の手も打てますが、相手が受けます"
+"vcf.notFourToast":"四以外の手も打てますが、相手が受けます",
+"common.loading":"読み込み中…",
+"install.title":"ホーム画面に追加",
+"install.desc":"ホーム画面に追加すると全画面・オフラインで使えます。",
+"install.iosStep":"下部の「共有」→「ホーム画面に追加」",
+"install.otherStep":"ブラウザメニュー →「ホーム画面に追加」"
 },
 "ko":{
 "menu.play":"대국",
@@ -386,6 +401,11 @@ window.I18N = {
 "vcf.noFourLeft":"사를 만들 수 있는 곳이 없습니다. 다시 하거나 힌트를 보세요",
 "vcf.continueHint":"사를 만들면 상대는 막을 수밖에 없습니다",
 "vcf.noHint":"이 문제는 힌트를 계산할 수 없습니다",
-"vcf.notFourToast":"사가 아니어도 둘 수 있지만 상대가 수비합니다"
+"vcf.notFourToast":"사가 아니어도 둘 수 있지만 상대가 수비합니다",
+"common.loading":"불러오는 중…",
+"install.title":"홈 화면에 추가",
+"install.desc":"홈 화면에 추가하면 전체 화면·오프라인으로 사용할 수 있습니다.",
+"install.iosStep":"하단 '공유' → '홈 화면에 추가'",
+"install.otherStep":"브라우저 메뉴 → '홈 화면에 추가'"
 }
 };

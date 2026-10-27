@@ -131,7 +131,16 @@
   function unlockAudio() {
     if (audioUnlocked) return;
     audioUnlocked = true;
-    if (cfg.bgm) startBgm();
+    // 背景音乐 2.6 MB，不在这里拉取：等到真正开局后再加载，避免和首屏抢带宽
+  }
+
+  var bgmTimer = null;
+  function startBgmSoon() {
+    if (!cfg.bgm || bgmTimer) return;
+    bgmTimer = setTimeout(function () {
+      bgmTimer = null;
+      if (cfg.bgm && audioUnlocked) startBgm();
+    }, 1500);
   }
 
   // ------------------------------------------------------------------ 棋盘
@@ -291,11 +300,20 @@
       var target = btn.getAttribute("data-nav");
       unlockAudio();
       if (target === "play-setup") resetSetupScreen();
-      if (target === "vcf-sets") renderVcfSets();
       if (target === "lectures") renderLectureList();
       if (target === "settings") renderSettings();
       if (target === "about") renderAbout();
       show(target);
+      if (target === "vcf-sets") {
+        // 题库数据较大，进入本页时才加载
+        var box = document.getElementById("vcfSetList");
+        if (box && (!SETS.length || !SETS[0].puzzles)) {
+          box.innerHTML = '<div class="loading-tip">' + t("common.loading") + "</div>";
+        }
+        ensureProblems(function () {
+          renderVcfSets();
+        });
+      }
     });
   });
 
@@ -383,6 +401,7 @@
     unlockAudio();
     startGame();
     show("game");
+    startBgmSoon();
   });
 
   function startGame() {
@@ -685,21 +704,64 @@
   // ------------------------------------------------------------------ VCF
   var vcfBoard = new BoardView(document.getElementById("vcfBoard"));
   var vcf = null;
-  var SETS = (window.PROBLEM_SETS || []).map(function (s) {
-    var cellsList = s.data.map(function (b64) {
-      var bin = atob(b64);
-      var out = new Uint8Array(bin.length);
-      for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
-      return out;
+
+  /*
+   * 题库体积 208 KB，不再随首屏加载：
+   *   · 先用 problems-meta.js 里的索引（约 1 KB）撑起列表和进度
+   *   · 真正进入挑战页时才注入 problems.js，再解码题目
+   *   · 单文件版把 problems.js 内联在 ui.js 之前，因此这里会直接命中
+   */
+  var SETS = [];
+
+  function buildSetList() {
+    var full = window.PROBLEM_SETS || [];
+    var meta = window.PROBLEM_SETS_META || [];
+    var base = full.length ? full : meta;
+    SETS = base.map(function (s) {
+      return { id: s.id, group: s.group, moves: s.moves, count: s.count, puzzles: null };
     });
-    return {
-      id: s.id,
-      group: s.group,
-      moves: s.moves,
-      count: s.count,
-      puzzles: cellsList,
+    if (!full.length) return;
+    SETS.forEach(function (set, i) {
+      var s = full[i];
+      if (!s || s.id !== set.id || !s.data) return;
+      set.puzzles = s.data.map(function (b64) {
+        var bin = atob(b64);
+        var out = new Uint8Array(bin.length);
+        for (var k = 0; k < bin.length; k++) out[k] = bin.charCodeAt(k);
+        return out;
+      });
+    });
+  }
+  buildSetList();
+
+  var problemsLoading = null;
+
+  function ensureProblems(cb) {
+    if (SETS.length && SETS[0].puzzles) {
+      cb();
+      return;
+    }
+    if (problemsLoading) {
+      problemsLoading.push(cb);
+      return;
+    }
+    problemsLoading = [cb];
+    var s = document.createElement("script");
+    s.src = "js/problems.js";
+    s.onload = function () {
+      buildSetList();
+      var list = problemsLoading;
+      problemsLoading = null;
+      (list || []).forEach(function (fn) {
+        fn();
+      });
     };
-  });
+    s.onerror = function () {
+      problemsLoading = null;
+      toast(document.getElementById("vcfToast"), t("vcf.noHint"));
+    };
+    document.head.appendChild(s);
+  }
 
   var GROUP_ORDER = ["black", "white_simple", "white_forbid", "misc"];
   var GROUP_LABEL = {
@@ -1015,9 +1077,37 @@
       .filter(Boolean);
   }
 
+  var lecturesLoading = null;
+  function ensureLectures(cb) {
+    if (window.LECTURES) {
+      cb();
+      return;
+    }
+    if (lecturesLoading) {
+      lecturesLoading.push(cb);
+      return;
+    }
+    lecturesLoading = [cb];
+    var s = document.createElement("script");
+    s.src = "js/lectures.js";
+    s.onload = function () {
+      var list = lecturesLoading;
+      lecturesLoading = null;
+      (list || []).forEach(function (fn) {
+        fn();
+      });
+    };
+    s.onerror = function () {
+      lecturesLoading = null;
+    };
+    document.head.appendChild(s);
+  }
+
   function openLecture(i) {
     lectureIndex = i;
-    renderLecture();
+    ensureLectures(function () {
+      renderLecture();
+    });
     show("lecture");
   }
 
@@ -1312,6 +1402,38 @@
     // 预置棋盘背景
     gameBoard.applyDesign();
     vcfBoard.applyDesign();
+
+    setupInstallHint();
+  }
+
+  /*
+   * iOS Safari 里提示「添加到主屏幕」。
+   * 已经在桌面图标里运行（standalone）或用户关掉过一次，都不再显示。
+   */
+  function setupInstallHint() {
+    var bar = document.getElementById("installBar");
+    if (!bar) return;
+    var ua = navigator.userAgent || "";
+    var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var standalone =
+      navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+    var KEY = "gomoku.installHint";
+    var dismissed = false;
+    try {
+      dismissed = localStorage.getItem(KEY) === "1";
+    } catch (e) {}
+    if (!isIOS || standalone || dismissed) return;
+
+    document.getElementById("installTitle").textContent = t("install.title");
+    document.getElementById("installDesc").textContent = t("install.iosStep");
+    bar.hidden = false;
+    document.getElementById("installClose").addEventListener("click", function () {
+      bar.hidden = true;
+      try {
+        localStorage.setItem(KEY, "1");
+      } catch (e) {}
+    });
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
